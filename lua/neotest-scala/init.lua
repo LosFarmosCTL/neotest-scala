@@ -120,7 +120,7 @@ local function get_project_name(path, runner)
         return nil
     end
     for _, line in ipairs(lines) do
-        local project = line:match('^name := "(.+)"')
+        local project = line:match('name := "(.+)"')
         if project then
             return project
         end
