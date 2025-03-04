@@ -53,7 +53,7 @@ local function build_command_with_test_path(project, runner, test_path, extra_ar
         "sbt",
         "--no-colors",
         extra_args,
-        project .. "/testOnly -- " .. '"' .. test_path .. '"',
+        "testOnly -- " .. '"' .. test_path .. '"',
     })
 end
 
@@ -336,7 +336,7 @@ local function scalatest_framework()
             "sbt",
             "--no-colors",
             extra_args,
-            project .. "/testOnly " .. test_namespace .. test_path,
+            "testOnly " .. test_namespace .. test_path,
         })
     end
 
@@ -367,7 +367,7 @@ local function scalatest_framework()
                 test_namespace = current_namespace
             end
             if test_namespace and vim.startswith(line, "-") and vim.endswith(line, " *** FAILED ***") then
-                local test_name = get_test_name(line, " *** FAILED ***")
+                local test_name = get_test_name(line, " ... FAILED")
                 if test_name then
                     local test_id = test_namespace .. "." .. vim.trim(test_name)
                     test_results[test_id] = TEST_FAILED
@@ -389,7 +389,7 @@ local function scalatest_framework()
     ---@return string|nil
     local function match_func(test_results, position_id)
         for test_id, result in pairs(test_results) do
-            if position_id:match(test_id) then
+            if vim.endswith(position_id, test_id) then
                 return result
             end
         end
